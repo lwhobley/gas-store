@@ -497,7 +497,7 @@ export default function Home() {
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [activeFilter, setActiveFilter] = useState('ALL');
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutLoading] = useState(false);
   const [toast, setToast] = useState({ msg: '', visible: false });
   const storeRef = useRef(null);
 
@@ -523,26 +523,9 @@ export default function Home() {
     setCartItems(prev => prev.filter((_, i) => i !== idx));
   };
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (cartItems.length === 0) return;
-    setCheckoutLoading(true);
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: cartItems }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        showToast('⚠ Checkout unavailable — contact us to order!');
-      }
-    } catch {
-      showToast('⚠ Checkout unavailable — contact us to order!');
-    } finally {
-      setCheckoutLoading(false);
-    }
+    showToast('💌 To order, DM us on Instagram or email loungeability@gmail.com with your cart!');
   };
 
   const gasProducts    = PRODUCTS.filter(p => p.collection === 'GAS');
