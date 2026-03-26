@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
-import { PRODUCTS } from '../data/products';
+import { PRODUCTS, PRICE_BY_SIZE } from '../data/products';
 // ─── COLOR MAP ──────────────────────────────────────────────
 const COLOR_HEX = {
   White: '#FFFFFF', Black: '#1A1A1A', Navy: '#1B2A4A',
@@ -42,7 +42,14 @@ function ProductModal({ product, onClose, onAddToCart }) {
           </div>
           <div className="modal-details">
             <div className="modal-name">{product.name}</div>
-            <div className="modal-price">${product.price.toFixed(2)}</div>
+            <div className="modal-price">
+              ${(PRICE_BY_SIZE[size] ?? product.price).toFixed(2)}
+              {size && ['2XL','3XL','4XL','5XL'].includes(size) && (
+                <span style={{ fontSize: '0.7rem', color: '#999', fontFamily: 'sans-serif', fontWeight: 400, marginLeft: '0.5rem' }}>
+                  ({size === '2XL' ? '+$2' : '+$4'} extended size)
+                </span>
+              )}
+            </div>
 
             <div>
               <div className="modal-label">Select Size</div>
@@ -74,7 +81,8 @@ function ProductModal({ product, onClose, onAddToCart }) {
               className="modal-add-btn"
               disabled={!canAdd}
               onClick={() => {
-                onAddToCart({ ...product, selectedSize: size, selectedColor: color || 'Default' });
+                const finalPrice = PRICE_BY_SIZE[size] ?? product.price;
+                onAddToCart({ ...product, price: finalPrice, selectedSize: size, selectedColor: color || 'Default' });
                 onClose();
               }}
             >
